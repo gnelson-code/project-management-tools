@@ -1,17 +1,18 @@
 # pm
 
-Program management tools for biotech PMs. Ships four skills and a browser-based timeline editor.
+Program management tools. Ships five skills and a browser-based timeline editor.
 
 | Skill | What it does |
 |-------|-------------|
 | [`/pm:timeline`](skills/timeline/SKILL.md) | Extract, draft, and edit program timelines from prose, conversation, or structured shifts. Pairs with the [browser editor](../../tools/timeline-editor/README.md). |
 | [`/pm:compare`](skills/compare/SKILL.md) | Compare two versions of a program timeline — matches tasks by name and workstream, reports date shifts, status changes, added/removed tasks, and per-workstream impact. Optionally outputs a flagged YAML for visual review. |
-| [`/pm:assess`](skills/assess/SKILL.md) | Adversarial risk assessment for drug pipeline critical path — interviews for context, drafts a structured register, then iterates with a [critic sub-agent](agents/risk-critic.md) until stress-tested. |
+| [`/pm:debrief`](skills/debrief/SKILL.md) | Adversarial meeting debrief generator — synthesizes one or more transcripts into decisions, action items, open questions, risks, and cross-meeting changes, then runs two [critic passes](agents/debrief-critic.md) to verify completeness and accuracy. |
+| [`/pm:assess`](skills/assess/SKILL.md) | Adversarial risk assessment for project critical path — interviews for context, drafts a structured register, then iterates with a [critic sub-agent](agents/risk-critic.md) until stress-tested. |
 | [`/pm:exec-summary`](skills/exec-summary/SKILL.md) | Concision editor for executive communications — takes a draft, surfaces analyst questions, produces a structured exec-ready rewrite, then runs adversarial critique via [concision-critic](agents/concision-critic.md). |
 
 ## Supported inputs
 
-All four skills accept files as positional arguments. The file format table below applies to all of them.
+All five skills accept files as positional arguments. The file format table below applies to all of them.
 
 ### File formats
 
@@ -46,16 +47,19 @@ plugins/pm/
 ├── commands/
 │   ├── timeline.md
 │   ├── compare.md
+│   ├── debrief.md
 │   ├── assess.md
 │   └── exec-summary.md
 ├── skills/
 │   ├── timeline/SKILL.md
 │   ├── compare/SKILL.md
+│   ├── debrief/SKILL.md
 │   ├── assess/SKILL.md
 │   └── exec-summary/SKILL.md
 ├── agents/
 │   ├── risk-critic.md
-│   └── concision-critic.md
+│   ├── concision-critic.md
+│   └── debrief-critic.md
 └── README.md
 
 tools/timeline-editor/          # paired browser tool for /pm:timeline
@@ -73,6 +77,9 @@ notes/risk/                     # output directory for /pm:assess artifacts
 notes/timeline/                 # output directory for /pm:compare artifacts
 ├── compare-*.md                # diff reports
 └── compare-*.yaml              # flagged YAML for visual review
+
+notes/debrief/                  # output directory for /pm:debrief artifacts
+└── {slug}-{date}.md            # meeting debriefs
 
 notes/exec/                     # output directory for /pm:exec-summary artifacts
 └── {slug}-{date}.md            # exec summaries

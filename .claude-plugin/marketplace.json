@@ -9,8 +9,8 @@
   "plugins": [
     {
       "name": "pm",
-      "description": "Program management tools — Excel-to-visual timeline editor, timeline comparison, executive summary editor, and adversarial risk assessment. Works across domains; ships with biotech defaults.",
-      "version": "0.2.0",
+      "description": "Program management tools — timeline editor, timeline comparison, meeting debrief, executive summary editor, and adversarial risk assessment. Works across domains; ships with biotech defaults.",
+      "version": "0.3.0",
       "author": {
         "name": "Graham Nelson"
       },

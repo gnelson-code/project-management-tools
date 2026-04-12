@@ -1,6 +1,6 @@
 # Project Management Tools
 
-A Claude Code plugin and visual editor for program managers. Covers four workflows that eat up PM time: building and editing program timelines, comparing timeline versions, running structured risk assessments, and writing executive summaries.
+A Claude Code plugin and visual editor for program managers. Covers five workflows that eat up PM time: building and editing program timelines, comparing timeline versions, synthesizing meeting transcripts, running structured risk assessments, and writing executive summaries.
 
 Works across domains — software, biotech, financial services, construction, or anything with workstreams and deadlines. The risk assessment skill (`/pm:assess`) ships with biotech-oriented defaults (drug pipeline categories, regulatory pathways) born from real pharma program management, but the interview-and-critique structure adapts to any domain.
 
@@ -14,16 +14,17 @@ Everything runs inside Claude Code — no installs, no dependencies, no terminal
 
 ### Plugin: `pm`
 
-Four slash commands, each backed by a detailed skill definition:
+Five slash commands, each backed by a detailed skill definition:
 
 | Command | What it does |
 |---------|-------------|
 | `/pm:timeline` | Extracts program timelines from documents (meeting notes, protocols, PDFs), builds them conversationally, or applies bulk edits to existing timelines. Outputs canonical YAML and hands off to the visual editor. |
 | `/pm:compare` | Compares two versions of a program timeline — matches tasks by name and workstream, reports date shifts, status changes, added/removed tasks, and per-workstream impact. Optionally outputs a flagged YAML for visual review. |
+| `/pm:debrief` | Adversarial meeting debrief generator. Synthesizes one or more meeting transcripts into decisions, action items, open questions, risks, and cross-meeting changes. Two critic passes verify nothing was dropped and nothing was invented. |
 | `/pm:assess` | Adversarial risk assessment for project critical path. Interviews you for portfolio context, drafts a structured risk register, then stress-tests it with a critic sub-agent across multiple iterations until the analysis is defensible. Ships with biotech/pharma defaults; adaptable to other domains. |
 | `/pm:exec-summary` | Concision editor for executive communications. Takes a draft, surfaces questions where your confusion mirrors the reader's, produces a structured rewrite, then runs adversarial critique from the audience's perspective. |
 
-The plugin also includes two critic sub-agents (`risk-critic` and `concision-critic`) that provide adversarial review during the assess and exec-summary workflows.
+The plugin also includes three critic sub-agents (`risk-critic`, `concision-critic`, and `debrief-critic`) that provide adversarial review during the assess, exec-summary, and debrief workflows.
 
 ### Tool: Timeline Editor
 
@@ -33,7 +34,7 @@ Lives at `tools/timeline-editor/index.html` — double-click to open. No server,
 
 ### Supported file formats
 
-All four skills accept files as input. The format determines how the file is parsed:
+All five skills accept files as input. The format determines how the file is parsed:
 
 | Format | How it's read |
 |--------|--------------|
@@ -143,6 +144,21 @@ The skill outputs YAML, then prints a link to the visual editor where you can ma
 
 Produces a diff report under `notes/timeline/` showing date shifts, status changes, added/removed tasks, and per-workstream impact. With `--yaml`, also outputs an updated timeline with changed tasks flagged for visual review in the editor.
 
+### Meeting debrief
+
+```bash
+# Synthesize multiple meeting transcripts (chronological order)
+/pm:debrief steering-jan.md steering-feb.md steering-mar.md
+
+# Single meeting transcript
+/pm:debrief weekly-standup.md --single
+
+# PDF transcripts
+/pm:debrief ~/Downloads/meeting-recording-transcript.pdf
+```
+
+Produces a structured debrief under `notes/debrief/` with decisions, action items, open questions, risks, cross-meeting timeline changes, and unresolved disagreements. Two critic passes verify completeness (nothing dropped) and accuracy (nothing invented).
+
 ### Risk assessment
 
 ```bash
@@ -188,16 +204,19 @@ project-management-tools/
 │   ├── commands/                  # Slash command definitions
 │   │   ├── timeline.md
 │   │   ├── compare.md
+│   │   ├── debrief.md
 │   │   ├── assess.md
 │   │   └── exec-summary.md
 │   ├── skills/                    # Detailed skill implementations
 │   │   ├── timeline/SKILL.md
 │   │   ├── compare/SKILL.md
+│   │   ├── debrief/SKILL.md
 │   │   ├── assess/SKILL.md
 │   │   └── exec-summary/SKILL.md
 │   └── agents/                    # Critic sub-agents
 │       ├── risk-critic.md
-│       └── concision-critic.md
+│       ├── concision-critic.md
+│       └── debrief-critic.md
 ├── tools/
 │   └── timeline-editor/           # Browser-based visual editor
 │       ├── index.html
@@ -206,21 +225,22 @@ project-management-tools/
 │           └── sample-program.xlsx
 └── notes/                         # Output directory (created by skills)
     ├── timeline/                  # /pm:compare artifacts
+    ├── debrief/                   # /pm:debrief artifacts
     ├── risk/                      # /pm:assess artifacts
     └── exec/                      # /pm:exec-summary artifacts
 ```
 
 ## Authors
 
-Graham Nelson — Lead MLE
-
-[LinkedIn](https://www.linkedin.com/in/grahamenelson/) · [GitHub](https://github.com/grahamnelson) · graham.nelson94@gmail.com
-
-Michelle Nelson — Director of Program Management, Biotech
+Michelle Nelson — Director of Program Management, Biotech (primary author)
 
 [LinkedIn](https://www.linkedin.com/in/michelle-pham-nelson/) · mipham626@gmail.com
 
-The biotech-specific defaults in `/pm:assess` (drug pipeline risk categories, regulatory pathway interviews, clinical/CMC/regulatory workstream conventions) come from Michelle's experience in pharma program management.
+Graham Nelson — Lead MLE, Financial Services
+
+[LinkedIn](https://www.linkedin.com/in/grahamenelson/) · [GitHub](https://github.com/grahamnelson) · graham.nelson94@gmail.com
+
+The workflows in this repo — timeline extraction, risk register stress-testing, executive summary editing, meeting debrief verification — are formalizations of processes Michelle developed through years of running biotech programs. Graham brought the engineering side: adversarial critique architecture, multi-pass verification, progressive model de-escalation, and the tooling to make it all work inside Claude Code.
 
 ## License
 
