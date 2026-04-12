@@ -4,7 +4,7 @@
     "name": "Graham Nelson, Michelle Nelson"
   },
   "metadata": {
-    "description": "Graham & Michelel's suite of project management tools and skills",
+    "description": "Graham & Michelle's suite of project management tools and skills",
     "version": "0.1.0"
   },
   "plugins": [
@@ -13,7 +13,7 @@
       "source": "./plugins/pm",
       "description": "Program management tools for biotech PMs — Excel-to-visual timeline editor with zero-setup browser editor, executive summary editor, and risk assessment workflow.",
       "version": "0.1.0",
-      "author": { "name": "Graham Nelson" }
+      "author": { "name": "Graham Nelson, Michelle Nelson" }
     }
   ]
 }
