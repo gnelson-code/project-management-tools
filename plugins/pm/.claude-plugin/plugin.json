@@ -1,6 +1,6 @@
 {
   "name": "pm",
-  "description": "Program management tools for biotech PMs — timeline editor, timeline comparison, adversarial risk assessment for drug pipeline critical path, concision editor for executive communications",
+  "description": "Program management tools — timeline editor, timeline comparison, adversarial risk assessment, and concision editor for executive communications. Works across domains; ships with biotech defaults for risk assessment.",
   "version": "0.2.0",
   "author": {
     "name": "Graham Nelson"

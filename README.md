@@ -1,6 +1,8 @@
 # Project Management Tools
 
-A Claude Code plugin and visual editor for biotech program managers. Covers four workflows that eat up PM time: building and editing program timelines, comparing timeline versions, running structured risk assessments, and writing executive summaries.
+A Claude Code plugin and visual editor for program managers. Covers four workflows that eat up PM time: building and editing program timelines, comparing timeline versions, running structured risk assessments, and writing executive summaries.
+
+Works across domains — software, biotech, financial services, construction, or anything with workstreams and deadlines. The risk assessment skill (`/pm:assess`) ships with biotech-oriented defaults (drug pipeline categories, regulatory pathways) born from real pharma program management, but the interview-and-critique structure adapts to any domain.
 
 Everything runs inside Claude Code — no installs, no dependencies, no terminal commands. Works in both the Claude Code CLI and the Code mode in Claude Desktop. The timeline editor is a single HTML file that opens in any browser.
 
@@ -18,7 +20,7 @@ Four slash commands, each backed by a detailed skill definition:
 |---------|-------------|
 | `/pm:timeline` | Extracts program timelines from documents (meeting notes, protocols, PDFs), builds them conversationally, or applies bulk edits to existing timelines. Outputs canonical YAML and hands off to the visual editor. |
 | `/pm:compare` | Compares two versions of a program timeline — matches tasks by name and workstream, reports date shifts, status changes, added/removed tasks, and per-workstream impact. Optionally outputs a flagged YAML for visual review. |
-| `/pm:assess` | Adversarial risk assessment for drug pipeline critical path. Interviews you for portfolio context, drafts a structured risk register, then stress-tests it with a critic sub-agent across multiple iterations until the analysis is defensible. |
+| `/pm:assess` | Adversarial risk assessment for project critical path. Interviews you for portfolio context, drafts a structured risk register, then stress-tests it with a critic sub-agent across multiple iterations until the analysis is defensible. Ships with biotech/pharma defaults; adaptable to other domains. |
 | `/pm:exec-summary` | Concision editor for executive communications. Takes a draft, surfaces questions where your confusion mirrors the reader's, produces a structured rewrite, then runs adversarial critique from the audience's perspective. |
 
 The plugin also includes two critic sub-agents (`risk-critic` and `concision-critic`) that provide adversarial review during the assess and exec-summary workflows.
@@ -115,10 +117,10 @@ Or double-click `index.html` in Finder. Drag an Excel or YAML file onto the page
 /pm:timeline
 
 # Edit an existing timeline
-/pm:timeline program-timeline.yaml --edit "shift all CMC tasks out 6 weeks"
+/pm:timeline program-timeline.yaml --edit "shift all backend tasks out 6 weeks"
 
 # Bulk shift from a specific task forward
-/pm:timeline program-timeline.yaml --shift-from "IND submission" --by 6w
+/pm:timeline program-timeline.yaml --shift-from "launch" --by 6w
 
 # Excel files go straight to the visual editor — the skill will redirect you
 /pm:timeline master-timeline.xlsx
@@ -208,15 +210,17 @@ project-management-tools/
     └── exec/                      # /pm:exec-summary artifacts
 ```
 
-## Author
+## Authors
 
 Graham Nelson — Lead MLE
 
 [LinkedIn](https://www.linkedin.com/in/grahamenelson/) · [GitHub](https://github.com/grahamnelson) · graham.nelson94@gmail.com
 
-Michelle Nelson - Director of Program Management
+Michelle Nelson — Director of Program Management, Biotech
 
 [LinkedIn](https://www.linkedin.com/in/michelle-pham-nelson/) · mipham626@gmail.com
+
+The biotech-specific defaults in `/pm:assess` (drug pipeline risk categories, regulatory pathway interviews, clinical/CMC/regulatory workstream conventions) come from Michelle's experience in pharma program management.
 
 ## License
 
