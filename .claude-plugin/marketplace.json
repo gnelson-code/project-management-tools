@@ -1,8 +1,11 @@
 {
   "name": "project-management-tools",
-  "description": "Graham & Michelle's suite of project management tools and skills",
   "owner": {
     "name": "Graham Nelson, Michelle Nelson"
+  },
+  "metadata": {
+    "description": "Graham & Michelle's suite of project management tools and skills",
+    "version": "0.1.0"
   },
   "plugins": [
     {
