@@ -1,6 +1,6 @@
 # Project Management Tools
 
-A Claude Code plugin and visual editor for biotech program managers. Covers three workflows that eat up PM time: building and editing program timelines, running structured risk assessments, and writing executive summaries.
+A Claude Code plugin and visual editor for biotech program managers. Covers four workflows that eat up PM time: building and editing program timelines, comparing timeline versions, running structured risk assessments, and writing executive summaries.
 
 Everything runs inside Claude Code — no installs, no dependencies, no terminal commands. Works in both the Claude Code CLI and the Code mode in Claude Desktop. The timeline editor is a single HTML file that opens in any browser.
 
@@ -12,11 +12,12 @@ Everything runs inside Claude Code — no installs, no dependencies, no terminal
 
 ### Plugin: `pm`
 
-Three slash commands, each backed by a detailed skill definition:
+Four slash commands, each backed by a detailed skill definition:
 
 | Command | What it does |
 |---------|-------------|
 | `/pm:timeline` | Extracts program timelines from documents (meeting notes, protocols, PDFs), builds them conversationally, or applies bulk edits to existing timelines. Outputs canonical YAML and hands off to the visual editor. |
+| `/pm:compare` | Compares two versions of a program timeline — matches tasks by name and workstream, reports date shifts, status changes, added/removed tasks, and per-workstream impact. Optionally outputs a flagged YAML for visual review. |
 | `/pm:assess` | Adversarial risk assessment for drug pipeline critical path. Interviews you for portfolio context, drafts a structured risk register, then stress-tests it with a critic sub-agent across multiple iterations until the analysis is defensible. |
 | `/pm:exec-summary` | Concision editor for executive communications. Takes a draft, surfaces questions where your confusion mirrors the reader's, produces a structured rewrite, then runs adversarial critique from the audience's perspective. |
 
@@ -30,7 +31,7 @@ Lives at `tools/timeline-editor/index.html` — double-click to open. No server,
 
 ### Supported file formats
 
-All three skills accept files as input. The format determines how the file is parsed:
+All four skills accept files as input. The format determines how the file is parsed:
 
 | Format | How it's read |
 |--------|--------------|
@@ -125,6 +126,21 @@ Or double-click `index.html` in Finder. Drag an Excel or YAML file onto the page
 
 The skill outputs YAML, then prints a link to the visual editor where you can make interactive edits and export to PNG for slides.
 
+### Timeline comparison
+
+```bash
+# Compare two Excel snapshots
+/pm:compare timeline-v1.xlsx timeline-v2.xlsx
+
+# Compare and output a flagged YAML for visual review
+/pm:compare timeline-jan.xlsx timeline-mar.xlsx --yaml
+
+# Mix formats — Excel before, YAML after
+/pm:compare old-timeline.xlsx current-timeline.yaml
+```
+
+Produces a diff report under `notes/timeline/` showing date shifts, status changes, added/removed tasks, and per-workstream impact. With `--yaml`, also outputs an updated timeline with changed tasks flagged for visual review in the editor.
+
 ### Risk assessment
 
 ```bash
@@ -169,10 +185,12 @@ project-management-tools/
 │   ├── .claude-plugin/plugin.json
 │   ├── commands/                  # Slash command definitions
 │   │   ├── timeline.md
+│   │   ├── compare.md
 │   │   ├── assess.md
 │   │   └── exec-summary.md
 │   ├── skills/                    # Detailed skill implementations
 │   │   ├── timeline/SKILL.md
+│   │   ├── compare/SKILL.md
 │   │   ├── assess/SKILL.md
 │   │   └── exec-summary/SKILL.md
 │   └── agents/                    # Critic sub-agents
@@ -185,6 +203,7 @@ project-management-tools/
 │       └── examples/
 │           └── sample-program.xlsx
 └── notes/                         # Output directory (created by skills)
+    ├── timeline/                  # /pm:compare artifacts
     ├── risk/                      # /pm:assess artifacts
     └── exec/                      # /pm:exec-summary artifacts
 ```

@@ -1,16 +1,17 @@
 # pm
 
-Program management tools for biotech PMs. Ships three skills and a browser-based timeline editor.
+Program management tools for biotech PMs. Ships four skills and a browser-based timeline editor.
 
 | Skill | What it does |
 |-------|-------------|
 | [`/pm:timeline`](skills/timeline/SKILL.md) | Extract, draft, and edit program timelines from prose, conversation, or structured shifts. Pairs with the [browser editor](../../tools/timeline-editor/README.md). |
+| [`/pm:compare`](skills/compare/SKILL.md) | Compare two versions of a program timeline — matches tasks by name and workstream, reports date shifts, status changes, added/removed tasks, and per-workstream impact. Optionally outputs a flagged YAML for visual review. |
 | [`/pm:assess`](skills/assess/SKILL.md) | Adversarial risk assessment for drug pipeline critical path — interviews for context, drafts a structured register, then iterates with a [critic sub-agent](agents/risk-critic.md) until stress-tested. |
 | [`/pm:exec-summary`](skills/exec-summary/SKILL.md) | Concision editor for executive communications — takes a draft, surfaces analyst questions, produces a structured exec-ready rewrite, then runs adversarial critique via [concision-critic](agents/concision-critic.md). |
 
 ## Supported inputs
 
-All three skills accept files as positional arguments. The file format table below applies to all of them.
+All four skills accept files as positional arguments. The file format table below applies to all of them.
 
 ### File formats
 
@@ -44,10 +45,12 @@ plugins/pm/
 ├── .claude-plugin/plugin.json
 ├── commands/
 │   ├── timeline.md
+│   ├── compare.md
 │   ├── assess.md
 │   └── exec-summary.md
 ├── skills/
 │   ├── timeline/SKILL.md
+│   ├── compare/SKILL.md
 │   ├── assess/SKILL.md
 │   └── exec-summary/SKILL.md
 ├── agents/
@@ -66,6 +69,10 @@ notes/risk/                     # output directory for /pm:assess artifacts
 ├── portfolio-*.md              # portfolio context files
 ├── register-*.md               # risk registers
 └── exec-summary-*.md           # executive summaries
+
+notes/timeline/                 # output directory for /pm:compare artifacts
+├── compare-*.md                # diff reports
+└── compare-*.yaml              # flagged YAML for visual review
 
 notes/exec/                     # output directory for /pm:exec-summary artifacts
 └── {slug}-{date}.md            # exec summaries

@@ -9,8 +9,8 @@
   "plugins": [
     {
       "name": "pm",
-      "description": "Program management tools for biotech PMs — Excel-to-visual timeline editor with zero-setup browser editor, executive summary editor, and risk assessment workflow.",
-      "version": "0.1.0",
+      "description": "Program management tools for biotech PMs — Excel-to-visual timeline editor with zero-setup browser editor, timeline comparison, executive summary editor, and risk assessment workflow.",
+      "version": "0.2.0",
       "author": {
         "name": "Graham Nelson"
       },
