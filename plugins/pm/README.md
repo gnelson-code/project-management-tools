@@ -1,6 +1,6 @@
 # pm
 
-Program management tools. Ships five skills and a browser-based timeline editor.
+Program management tools. Ships six skills and a browser-based timeline editor.
 
 | Skill | What it does |
 |-------|-------------|
@@ -8,7 +8,8 @@ Program management tools. Ships five skills and a browser-based timeline editor.
 | [`/pm:compare`](skills/compare/SKILL.md) | Compare two versions of a program timeline — matches tasks by name and workstream, reports date shifts, status changes, added/removed tasks, and per-workstream impact. Optionally outputs a flagged YAML for visual review. |
 | [`/pm:debrief`](skills/debrief/SKILL.md) | Adversarial meeting debrief generator — synthesizes one or more transcripts into decisions, action items, open questions, risks, and cross-meeting changes, then runs two [critic passes](agents/debrief-critic.md) to verify completeness and accuracy. |
 | [`/pm:assess`](skills/assess/SKILL.md) | Adversarial risk assessment for project critical path — interviews for context, drafts a structured register, then iterates with a [critic sub-agent](agents/risk-critic.md) until stress-tested. |
-| [`/pm:exec-summary`](skills/exec-summary/SKILL.md) | Concision editor for executive communications — takes a draft, surfaces analyst questions, produces a structured exec-ready rewrite, then runs adversarial critique via [concision-critic](agents/concision-critic.md). |
+| [`/pm:exec-summary`](skills/exec-summary/SKILL.md) | Concision editor for executive communications — takes a draft, surfaces analyst questions, produces a structured exec-ready rewrite, then runs adversarial critique via [concision-critic](agents/concision-critic.md). Supports persistent [personas](skills/persona/SKILL.md) via `--audience <slug>`. |
+| [`/pm:persona`](skills/persona/SKILL.md) | Create and manage executive personas — persistent models of specific readers (domain expertise, priorities, reading style, predictable questions, sensitivities). Used by `/pm:exec-summary` to calibrate output for a known audience. |
 
 ## Supported inputs
 
@@ -49,13 +50,15 @@ plugins/pm/
 │   ├── compare.md
 │   ├── debrief.md
 │   ├── assess.md
-│   └── exec-summary.md
+│   ├── exec-summary.md
+│   └── persona.md
 ├── skills/
 │   ├── timeline/SKILL.md
 │   ├── compare/SKILL.md
 │   ├── debrief/SKILL.md
 │   ├── assess/SKILL.md
-│   └── exec-summary/SKILL.md
+│   ├── exec-summary/SKILL.md
+│   └── persona/SKILL.md
 ├── agents/
 │   ├── risk-critic.md
 │   ├── concision-critic.md
@@ -82,5 +85,7 @@ notes/debrief/                  # output directory for /pm:debrief artifacts
 └── {slug}-{date}.md            # meeting debriefs
 
 notes/exec/                     # output directory for /pm:exec-summary artifacts
-└── {slug}-{date}.md            # exec summaries
+├── {slug}-{date}.md            # exec summaries
+└── personas/                   # persistent reader profiles (/pm:persona)
+    └── {slug}.md               # individual persona files
 ```
