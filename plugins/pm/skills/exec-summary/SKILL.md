@@ -45,6 +45,8 @@ All artifacts go under `notes/exec/`:
 
 ### Step 0: Resolve the audience
 
+`--audience` identifies the **primary reader** — the single person this document is written for. Every calibration decision (jargon tolerance, framing, structure, recommendation scoping) targets this one reader. If the document will be read by multiple people, the persona should be whoever the author most needs to land with. When no persona is provided, the skill treats the audience as a general group and calibrates conservatively.
+
 If `--audience` was provided, check whether the value matches a persona slug in `notes/exec/personas/`. If a file exists at `notes/exec/personas/{audience-value}.md`, read it and use the persona fields throughout the session:
 
 - **Domain expertise** → calibrates jargon tolerance. Terms in their "understands well" list don't need translation. Terms outside it do.

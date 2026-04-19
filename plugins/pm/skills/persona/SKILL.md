@@ -11,6 +11,8 @@ You are the orchestrator of an executive persona session. Your job is to build a
 
 A good persona answers: "If I hand this document to this person, what will they understand without help, what will they skip, what will they immediately ask about, and what will make them stop reading?"
 
+**Design note:** Each persona represents a single primary reader. When `/pm:exec-summary` loads a persona via `--audience`, it calibrates the entire document to that one person — not a committee. If a document goes to multiple readers, the user picks the one they most need to land with. This avoids the contradiction problem: a CEO who wants no jargon and a VP Eng who wants technical depth can't be served by the same calibration. Pick one, write for them.
+
 ### Artifact Locations
 
 All personas go under `notes/exec/personas/`:
