@@ -43,6 +43,21 @@ All artifacts go under `notes/exec/`:
 
 ## Phase 1: Ingest and Analyze
 
+### Step 0: Resolve the audience
+
+`--audience` identifies the **primary reader** — the single person this document is written for. Every calibration decision (jargon tolerance, framing, structure, recommendation scoping) targets this one reader. If the document will be read by multiple people, the persona should be whoever the author most needs to land with. When no persona is provided, the skill treats the audience as a general group and calibrates conservatively.
+
+If `--audience` was provided, check whether the value matches a persona slug in `notes/exec/personas/`. If a file exists at `notes/exec/personas/{audience-value}.md`, read it and use the persona fields throughout the session:
+
+- **Domain expertise** → calibrates jargon tolerance. Terms in their "understands well" list don't need translation. Terms outside it do.
+- **Priorities** → shapes the "Why this matters" framing. Lead with what they track.
+- **Reading style** → influences structure. If they only read the first paragraph and the recommendation, front-load aggressively.
+- **Predictable questions** → feeds Phase 2. Before surfacing your own analyst questions, check whether the draft preemptively addresses their known questions. If not, surface the gap.
+- **Decision authority** → shapes the recommendation framing. If they can approve directly, frame as "approve X." If they'd escalate, frame as "endorse X for {who}."
+- **Sensitivities** → review the rewrite for anything that would trigger a known pet peeve.
+
+If the value doesn't match a persona file, treat it as a freeform audience description (existing behavior). If the user provides both a slug and a freeform description (e.g., `--audience ceo "with extra context on the regulatory angle"`), load the persona and layer the freeform context on top.
+
 ### Step 1: Read the draft
 
 Read all provided files. If the user pasted content directly, use that. Build an internal model of:
@@ -103,7 +118,25 @@ These are places where I think the target audience will get stuck. My confusion 
 - {what's missing and why it matters for the recommendation}
 ```
 
-If the draft is clear and complete, skip this phase. Don't manufacture questions.
+### Persona-driven questions
+
+If a persona was loaded in Step 0, add a section after the analyst questions:
+
+```
+### What {name} will ask
+
+Based on their known patterns, {name} will likely ask:
+- {predictable question} — {whether the draft addresses it or not}
+- ...
+
+{If all predictable questions are addressed, note that: "{name}'s usual questions are covered."}
+```
+
+This is distinct from analyst questions. Analyst questions surface *your* confusion. Persona questions anticipate *their* confusion based on known patterns. Both are valuable.
+
+---
+
+If the draft is clear and complete and there are no persona-driven gaps, skip this phase. Don't manufacture questions.
 
 Wait for the user's responses before proceeding.
 
@@ -225,6 +258,16 @@ Spawn `concision-critic` as a **fresh sub-agent** every round. Never reuse agent
 ROUND: {N}
 TARGET AUDIENCE: {audience description}
 
+{If a persona was loaded, include:}
+PERSONA:
+- Understands well: {strong domains}
+- Needs translation: {translation domains}
+- Priorities: {what they track}
+- Reading style: {how they read}
+- Will ask: {predictable questions}
+- Sensitivities: {pet peeves, if any}
+- Decision authority: {what they can approve}
+
 Original draft:
 
 [paste original draft or summary of key content]
@@ -235,6 +278,12 @@ Exec summary (current version):
 
 Review this exec summary. Your job is to read it as the target audience would —
 someone who has NOT read the original draft and has limited time.
+
+{If persona is loaded:}
+You are reading as {name}, {role}. Use the persona fields above to calibrate
+your critique — flag jargon they wouldn't know, check that the framing leads
+with what they care about, and verify the recommendation is scoped to their
+decision authority.
 
 Attack it: is the recommendation clear? Can I make a decision from this alone?
 Is anything confusing, jargon-laden, too long, or missing?
@@ -304,7 +353,8 @@ Write the final exec summary to `notes/exec/{chosen-filename}.md`. Include a met
 ```markdown
 ---
 source: {original file path(s) or "pasted content"}
-audience: {audience description}
+audience: {audience description or persona slug}
+persona: {slug, if a persona was used — omit if freeform audience}
 created: {YYYY-MM-DD}
 critic-rounds: {N}
 ---

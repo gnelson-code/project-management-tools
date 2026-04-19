@@ -7,8 +7,8 @@ Concision editor for executive communications. Takes a draft document, surfaces 
 ```
 ┌─────────────────────────────────────────────────┐
 │  /pm:exec-summary  (orchestrator)               │
-│  1. Ingest draft → identify audience            │
-│  2. Analyst questions (confusion = signal)       │
+│  1. Ingest draft → resolve audience / persona   │
+│  2. Analyst + persona-driven questions           │
 │  3. Structured rewrite                          │
 │  4. Critic loop (Opus → Sonnet, 2 rounds)       │
 │  5. Finalize → notes/exec/                      │
@@ -20,7 +20,7 @@ Concision editor for executive communications. Takes a draft document, surfaces 
 │  • Recommendation clarity test                  │
 │  • Standalone test (can I decide without the    │
 │    original?)                                   │
-│  • Jargon detection for target audience         │
+│  • Jargon detection (persona-aware if loaded)   │
 │  • Impact specificity — qualitative → quantify  │
 │  • Length / density check (~400 words target)    │
 │  • Hedging removal                              │
@@ -34,8 +34,11 @@ Concision editor for executive communications. Takes a draft document, surfaces 
 # Rewrite a draft document
 /pm:exec-summary ~/Desktop/migration-proposal.md
 
-# Specify the audience
+# Specify the audience as freeform text
 /pm:exec-summary proposal.pdf --audience "C-suite, non-technical"
+
+# Use a saved persona (created via /pm:persona)
+/pm:exec-summary proposal.pdf --audience ceo
 
 # Multiple source files
 /pm:exec-summary proposal.md cost-analysis.xlsx
@@ -46,7 +49,9 @@ Concision editor for executive communications. Takes a draft document, surfaces 
 
 ## Key design decisions
 
-**Your confusion is signal.** Before rewriting, the orchestrator reads the draft as someone with roughly exec-level context. Places where it's confused map to places the exec will be confused. Things that feel unnecessary are probably cuttable. Both signals are surfaced as questions before the rewrite begins.
+**Persona-aware.** When `--audience` matches a persona slug in `notes/exec/personas/`, the skill loads the full persona — domain expertise, priorities, reading style, predictable questions, sensitivities, decision authority. This calibrates every phase: jargon tolerance (don't translate what they already know), framing (lead with what they track), structure (front-load for skimmers), and the critic prompt (critic reads *as* that person). Create personas with [`/pm:persona`](../persona/SKILL.md). If the slug doesn't match a persona file, it's treated as freeform audience text (existing behavior).
+
+**Your confusion is signal.** Before rewriting, the orchestrator reads the draft as someone with roughly exec-level context. Places where it's confused map to places the exec will be confused. Things that feel unnecessary are probably cuttable. Both signals are surfaced as questions before the rewrite begins. When a persona is loaded, the skill also checks whether the draft preemptively addresses that reader's predictable questions — gaps are surfaced alongside analyst questions.
 
 **Two modes.** The skill detects whether the draft is asking for a decision or informing for awareness, and picks the right structure. Decision mode: Problem → Why it matters → Recommendation → Key context → What we considered. Awareness mode: Bottom line → What happened → What this means → What's next. Sections can be dropped if empty or added if the content demands it. Target length: under 2 minutes of reading time (~400 words).
 
@@ -62,7 +67,7 @@ Outputs go to `notes/exec/`:
 
 | File | Purpose |
 |------|---------|
-| `{slug}-{YYYY-MM-DD}.md` | Final exec summary with YAML frontmatter (source, audience, date, rounds) |
+| `{slug}-{YYYY-MM-DD}.md` | Final exec summary with YAML frontmatter (source, audience, persona, date, rounds) |
 
 ## Rewrite principles
 

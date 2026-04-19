@@ -1,6 +1,6 @@
 # Project Management Tools
 
-A Claude Code plugin and visual editor for program managers. Covers five workflows that eat up PM time: building and editing program timelines, comparing timeline versions, synthesizing meeting transcripts, running structured risk assessments, and writing executive summaries.
+A Claude Code plugin and visual editor for program managers. Covers six workflows that eat up PM time: building and editing program timelines, comparing timeline versions, synthesizing meeting transcripts, running structured risk assessments, writing executive summaries, and building reusable reader personas for audience-calibrated communication.
 
 Works across domains — software, biotech, financial services, construction, or anything with workstreams and deadlines. The risk assessment skill (`/pm:assess`) ships with biotech-oriented defaults (drug pipeline categories, regulatory pathways) born from real pharma program management, but the interview-and-critique structure adapts to any domain.
 
@@ -14,7 +14,7 @@ Everything runs inside Claude Code — no installs, no dependencies, no terminal
 
 ### Plugin: `pm`
 
-Five slash commands, each backed by a detailed skill definition:
+Six slash commands, each backed by a detailed skill definition:
 
 | Command | What it does |
 |---------|-------------|
@@ -22,7 +22,8 @@ Five slash commands, each backed by a detailed skill definition:
 | `/pm:compare` | Compares two versions of a program timeline — matches tasks by name and workstream, reports date shifts, status changes, added/removed tasks, and per-workstream impact. Optionally outputs a flagged YAML for visual review. |
 | `/pm:debrief` | Adversarial meeting debrief generator. Synthesizes one or more meeting transcripts into decisions, action items, open questions, risks, and cross-meeting changes. Two critic passes verify nothing was dropped and nothing was invented. |
 | `/pm:assess` | Adversarial risk assessment for project critical path. Interviews you for portfolio context, drafts a structured risk register, then stress-tests it with a critic sub-agent across multiple iterations until the analysis is defensible. Ships with biotech/pharma defaults; adaptable to other domains. |
-| `/pm:exec-summary` | Concision editor for executive communications. Takes a draft, surfaces questions where your confusion mirrors the reader's, produces a structured rewrite, then runs adversarial critique from the audience's perspective. |
+| `/pm:exec-summary` | Concision editor for executive communications. Takes a draft, surfaces questions where your confusion mirrors the reader's, produces a structured rewrite, then runs adversarial critique from the audience's perspective. Supports persistent personas via `--audience <slug>`. |
+| `/pm:persona` | Create and manage executive personas — persistent models of specific readers capturing their domain expertise, priorities, reading style, predictable questions, and sensitivities. Used by `/pm:exec-summary` to calibrate output for a known audience. |
 
 The plugin also includes three critic sub-agents (`risk-critic`, `concision-critic`, and `debrief-critic`) that provide adversarial review during the assess, exec-summary, and debrief workflows.
 
@@ -186,6 +187,9 @@ Produces three artifacts under `notes/risk/`:
 # Edit a draft document into an exec summary
 /pm:exec-summary quarterly-update.md --audience "C-suite, non-technical"
 
+# Use a saved persona (created via /pm:persona)
+/pm:exec-summary quarterly-update.md --audience ceo
+
 # Multiple source files
 /pm:exec-summary status-report.md budget-summary.xlsx
 
@@ -193,7 +197,28 @@ Produces three artifacts under `notes/risk/`:
 /pm:exec-summary
 ```
 
-Produces a structured, audience-calibrated summary under `notes/exec/`.
+Produces a structured, audience-calibrated summary under `notes/exec/`. When `--audience` matches a persona slug, the skill loads the full persona — domain expertise, priorities, reading style, predictable questions — and uses it to calibrate the rewrite and critic passes.
+
+### Persona management
+
+```bash
+# Create a new persona interactively
+/pm:persona
+
+# Create with a name pre-filled
+/pm:persona "Sarah Chen"
+
+# List existing personas
+/pm:persona --list
+
+# Edit an existing persona
+/pm:persona --edit ceo
+
+# Delete a persona
+/pm:persona --delete ceo
+```
+
+Personas are saved to `notes/exec/personas/` and referenced by slug. Build them once, reuse across exec summaries.
 
 ## Repo structure
 
@@ -206,13 +231,15 @@ project-management-tools/
 │   │   ├── compare.md
 │   │   ├── debrief.md
 │   │   ├── assess.md
-│   │   └── exec-summary.md
+│   │   ├── exec-summary.md
+│   │   └── persona.md
 │   ├── skills/                    # Detailed skill implementations
 │   │   ├── timeline/SKILL.md
 │   │   ├── compare/SKILL.md
 │   │   ├── debrief/SKILL.md
 │   │   ├── assess/SKILL.md
-│   │   └── exec-summary/SKILL.md
+│   │   ├── exec-summary/SKILL.md
+│   │   └── persona/SKILL.md
 │   └── agents/                    # Critic sub-agents
 │       ├── risk-critic.md
 │       ├── concision-critic.md
@@ -228,6 +255,7 @@ project-management-tools/
     ├── debrief/                   # /pm:debrief artifacts
     ├── risk/                      # /pm:assess artifacts
     └── exec/                      # /pm:exec-summary artifacts
+        └── personas/              # /pm:persona persistent reader profiles
 ```
 
 ## Authors
